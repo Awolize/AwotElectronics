@@ -1,0 +1,40 @@
+esphome:
+  name: weight_sensor
+  platform: ESP8266
+  board: nodemcuv2
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  #power_save_mode: HIGH
+  fast_connect: true
+
+  manual_ip:
+    static_ip: 192.168.1.122
+    gateway: 192.168.1.1
+    subnet: 255.255.255.0
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: hx711
+    name: "HX711 Value"
+    dout_pin: D2
+    clk_pin: D1
+    gain: 128
+    update_interval: 3s
+    filters:
+      - multiply: -1.0
+      - calibrate_linear:
+          # - 1045624 -> 0 empty bed / nothing on the bed not even the matress
+          - 1238713 -> 0
+          - 2652552 -> 64.5
+    unit_of_measurement: kg
